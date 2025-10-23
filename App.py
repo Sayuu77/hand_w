@@ -167,7 +167,7 @@ canvas_result = st_canvas(
 # BOTÓN CENTRADO
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    predict_btn = st.button("🔍 Predict Digit", use_container_width=True)
+    predict_btn = st.button("Predict Digit", use_container_width=True)
 
 # ==============================
 # PREDICCIÓN
@@ -214,13 +214,5 @@ if predict_btn and canvas_result.image_data is not None:
 elif predict_btn:
     st.warning("Please draw a digit first ✏️")
 
-# ==============================
-# FOOTER MINIMALISTA
-# ==============================
-st.markdown("""
-<div style="text-align: center; color: #444; margin-top: 3rem; padding: 1rem; font-size: 0.8rem;">
-    AI-powered digit recognition • Built with Streamlit & TensorFlow
-</div>
-""", unsafe_allow_html=True)
 
 
