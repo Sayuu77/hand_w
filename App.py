@@ -152,7 +152,6 @@ stroke_width = st.slider(
 
 
 # CANVAS - Centrado y del mismo tamaño que el contenedor negro
-st.markdown('<div class="canvas-wrapper">', unsafe_allow_html=True)
 canvas_result = st_canvas(
     fill_color="rgba(0, 0, 0, 0)",
     stroke_width=stroke_width,
@@ -164,7 +163,6 @@ canvas_result = st_canvas(
     key="canvas",
     display_toolbar=True
 )
-st.markdown('</div>', unsafe_allow_html=True)
 
 # BOTÓN CENTRADO
 col1, col2, col3 = st.columns([1, 2, 1])
@@ -224,4 +222,5 @@ st.markdown("""
     AI-powered digit recognition • Built with Streamlit & TensorFlow
 </div>
 """, unsafe_allow_html=True)
+
 
