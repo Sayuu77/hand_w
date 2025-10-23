@@ -144,13 +144,12 @@ st.markdown('<div class="title">Digit Recognition</div>', unsafe_allow_html=True
 st.markdown('<div class="subtitle">Draw a digit and let AI recognize it</div>', unsafe_allow_html=True)
 
 # SLIDER DE GROSOR - Centrado
-st.markdown('<div class="slider-container">', unsafe_allow_html=True)
 stroke_width = st.slider(
     "Brush thickness", 
     5, 30, 15,
     help="Adjust the stroke width"
 )
-st.markdown('</div>', unsafe_allow_html=True)
+
 
 # CANVAS - Centrado y del mismo tamaño que el contenedor negro
 st.markdown('<div class="canvas-wrapper">', unsafe_allow_html=True)
@@ -225,3 +224,4 @@ st.markdown("""
     AI-powered digit recognition • Built with Streamlit & TensorFlow
 </div>
 """, unsafe_allow_html=True)
+
