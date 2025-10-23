@@ -15,54 +15,111 @@ st.set_page_config(
 )
 
 # ==============================
-# ESTILOS
+# ESTILOS MINIMALISTAS
 # ==============================
 st.markdown("""
 <style>
-    body, .stApp {
-        background-color:#111827;
-        color:white;
+    .stApp {
+        background: #0f0f0f;
+        color: #ffffff;
     }
+    
+    /* Centrar todo el contenido */
+    .main .block-container {
+        max-width: 500px;
+        padding: 2rem 1rem;
+    }
+    
     .title {
-        font-size: 2.3rem;
-        font-weight:600;
-        text-align:center;
-        margin-bottom:0.3rem;
-        color:white;
+        font-size: 2.5rem;
+        font-weight: 300;
+        text-align: center;
+        margin-bottom: 0.5rem;
+        color: #ffffff;
+        letter-spacing: -0.5px;
     }
+    
     .subtitle {
-        font-size:1rem;
-        text-align:center;
-        color:#9CA3AF;
-        margin-bottom:1.5rem;
+        font-size: 1rem;
+        text-align: center;
+        color: #888;
+        margin-bottom: 2rem;
+        font-weight: 300;
     }
-    .canvas-box {
-        background:#000;
-        padding:1rem;
-        border-radius:10px;
-        display:flex;
-        justify-content:center;
+    
+    .canvas-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #000000;
+        border-radius: 12px;
+        padding: 0;
+        margin: 0 auto 2rem auto;
+        width: 400px;
+        height: 400px;
+        border: 1px solid #333;
     }
+    
     .stButton>button {
-        width:100%;
-        background-color:#4F46E5;
-        color:white;
-        border:none;
-        padding:0.8rem;
-        border-radius:8px;
-        font-size:1rem;
-        font-weight:600;
-        cursor:pointer;
+        width: 100%;
+        background: #ffffff;
+        color: #000000;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin: 1rem 0;
     }
+    
     .stButton>button:hover {
-        background-color:#4338CA;
+        background: #f0f0f0;
+        transform: translateY(-1px);
     }
+    
     .result {
-        font-size:4rem;
-        font-weight:700;
-        text-align:center;
-        color:#4F46E5;
-        margin-top:1rem;
+        font-size: 5rem;
+        font-weight: 200;
+        text-align: center;
+        color: #ffffff;
+        margin: 1rem 0;
+        letter-spacing: -2px;
+    }
+    
+    .confidence {
+        text-align: center;
+        color: #888;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .slider-container {
+        margin: 1.5rem 0;
+    }
+    
+    /* Personalizar el slider */
+    .stSlider {
+        margin: 1rem 0;
+    }
+    
+    .stSlider > div > div {
+        background: #333;
+    }
+    
+    .stSlider > div > div > div {
+        background: #ffffff;
+    }
+    
+    /* Ocultar elementos innecesarios */
+    .st-emotion-cache-1kyxreq {
+        justify-content: center;
+    }
+    
+    /* Centrar el expander */
+    .st-expander {
+        margin: 1rem 0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -81,31 +138,39 @@ def load_model():
 model = load_model()
 
 # ==============================
-# INTERFAZ
+# INTERFAZ CENTRADA
 # ==============================
 st.markdown('<div class="title">Digit Recognition</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Dibuja un dígito (0-9) y deja que la IA lo reconozca</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Draw a digit and let AI recognize it</div>', unsafe_allow_html=True)
 
-# SLIDER DE GROSOR
-stroke_width = st.slider("Grosor del pincel", 5, 30, 15)
+# SLIDER DE GROSOR - Centrado
+st.markdown('<div class="slider-container">', unsafe_allow_html=True)
+stroke_width = st.slider(
+    "Brush thickness", 
+    5, 30, 15,
+    help="Adjust the stroke width"
+)
+st.markdown('</div>', unsafe_allow_html=True)
 
-# CANVAS
-st.markdown('<div class="canvas-box">', unsafe_allow_html=True)
+# CANVAS - Centrado y del mismo tamaño que el contenedor negro
+st.markdown('<div class="canvas-wrapper">', unsafe_allow_html=True)
 canvas_result = st_canvas(
     fill_color="rgba(0, 0, 0, 0)",
     stroke_width=stroke_width,
     stroke_color="#FFFFFF",
     background_color="#000000",
-    width=300,
-    height=300,
+    width=400,  # Mismo ancho que el contenedor
+    height=400, # Mismo alto que el contenedor
     drawing_mode="freedraw",
     key="canvas",
-    display_toolbar=True  # → incluye lápiz, borrar, rehacer, deshacer, limpiar
+    display_toolbar=True
 )
 st.markdown('</div>', unsafe_allow_html=True)
 
-# BOTÓN
-predict_btn = st.button("🔍 Predecir Dígito")
+# BOTÓN CENTRADO
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    predict_btn = st.button("🔍 Predict Digit", use_container_width=True)
 
 # ==============================
 # PREDICCIÓN
@@ -122,12 +187,41 @@ if predict_btn and canvas_result.image_data is not None:
     input_image = Image.fromarray(canvas_result.image_data.astype("uint8"), "RGBA")
     digit, conf, raw = predict(input_image, model)
 
+    # Mostrar resultado centrado
     st.markdown(f'<div class="result">{digit}</div>', unsafe_allow_html=True)
-    st.write(f"**Confianza:** {conf*100:.2f}%")
+    st.markdown(f'<div class="confidence">Confidence: {conf*100:.1f}%</div>', unsafe_allow_html=True)
 
-    with st.expander("Ver probabilidades"):
-        df = pd.DataFrame({"Dígito": range(10), "Probabilidad": raw}).sort_values("Probabilidad", ascending=False)
-        st.dataframe(df, use_container_width=True)
+    # Probabilidades en expander centrado
+    with st.expander("View probabilities"):
+        df = pd.DataFrame({
+            "Digit": range(10), 
+            "Probability": raw
+        }).sort_values("Probability", ascending=False)
+        
+        # Estilizar el dataframe
+        st.dataframe(
+            df,
+            use_container_width=True,
+            hide_index=True,
+            column_config={
+                "Digit": st.column_config.NumberColumn("Digit", format="%d"),
+                "Probability": st.column_config.ProgressColumn(
+                    "Probability",
+                    format="%.3f",
+                    min_value=0,
+                    max_value=1,
+                )
+            }
+        )
 
 elif predict_btn:
-    st.warning("Dibuja antes de predecir 😉")
+    st.warning("Please draw a digit first ✏️")
+
+# ==============================
+# FOOTER MINIMALISTA
+# ==============================
+st.markdown("""
+<div style="text-align: center; color: #444; margin-top: 3rem; padding: 1rem; font-size: 0.8rem;">
+    AI-powered digit recognition • Built with Streamlit & TensorFlow
+</div>
+""", unsafe_allow_html=True)
